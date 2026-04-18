@@ -40,7 +40,7 @@ gleam-scraper = "src.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["src*"]
+include = ["src*", "gleam_scraper*"]
 
 [tool.black]
 line-length = 88

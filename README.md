@@ -153,9 +153,25 @@ The project is structured for easy migration to a web app:
 - **src/ui.py**: CLI/TUI components
 - **src/cli.py**: CLI entry point
 
-## Future Web App
+## Programmatic API (for separate web repo)
 
-The scraper and database modules can be extracted into a FastAPI/Flask backend, while the CLI remains as a standalone tool.
+To integrate this project into a separate web application repository, use the stable public package API:
+
+```python
+from gleam_scraper import init_database, list_competitions, competitions_to_dicts
+
+init_database()
+competitions = list_competitions(force_refresh=False, scraper_mode="auto")
+payload = competitions_to_dicts(competitions)
+```
+
+The `gleam_scraper` package exposes:
+- `init_database()`
+- `list_competitions(...)`
+- `refresh_competitions(...)`
+- `competitions_to_dicts(...)`
+
+This keeps the scraper as the single source of truth while your web repo focuses on API/UI concerns.
 
 ## License
 
