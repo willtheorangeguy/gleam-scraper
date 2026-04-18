@@ -5,9 +5,8 @@ Cache management for giveaways
 import os
 from datetime import datetime, timedelta
 from typing import List, Optional
-from sqlalchemy.orm import Session
-from sqlalchemy import select
 import logging
+from sqlalchemy.orm import Session
 
 from .database import Giveaway as GiveawayModel, ScraperMetadata
 from .scraper import GleamScraper, Giveaway

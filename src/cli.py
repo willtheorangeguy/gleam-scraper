@@ -1,14 +1,8 @@
-"""
-CLI entry point for gleam-scraper
-"""
-
-import os
-import sys
 import logging
-from typing import Optional
+import sys
 import click
-from pathlib import Path
 from dotenv import load_dotenv
+from typing import Optional
 
 # Set up logging
 logging.basicConfig(
@@ -19,12 +13,6 @@ logger = logging.getLogger(__name__)
 
 # Load environment variables
 load_dotenv()
-
-# Import after environment is loaded
-from src.database import SessionLocal, init_db as init_database
-from src.cache import CacheManager
-from src.ui import SimpleTUI
-from src.csv_export import CSVExporter
 
 
 @click.command()
@@ -74,6 +62,11 @@ def main(
         gleam-scraper --scraper-mode browser --headed --force-refresh  # Visible browser
     """
     try:
+        from src.cache import CacheManager
+        from src.csv_export import CSVExporter
+        from src.database import SessionLocal, init_db as init_database
+        from src.ui import SimpleTUI
+
         # Initialize database if requested
         if init_db:
             click.echo("Initializing database...")

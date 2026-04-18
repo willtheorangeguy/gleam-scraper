@@ -2,7 +2,6 @@
 Tests for CSV export module
 """
 
-import pytest
 import tempfile
 import csv
 from pathlib import Path

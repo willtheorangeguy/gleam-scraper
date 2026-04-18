@@ -3,9 +3,9 @@ CSV export functionality for giveaways
 """
 
 import csv
-from pathlib import Path
-from typing import List, Optional
 import logging
+from pathlib import Path
+from typing import List
 
 from .scraper import Giveaway
 
