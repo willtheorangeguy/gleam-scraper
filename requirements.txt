@@ -1,4 +1,4 @@
-beautifulsoup4==4.12.2
+beautifulsoup4==4.14.3
 requests==2.32.5
 sqlalchemy==2.0.23
 psycopg2-binary==2.9.9
