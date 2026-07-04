@@ -5,7 +5,7 @@ psycopg2-binary==2.9.9
 python-dotenv==1.2.2
 rich==15.0.0
 prompt-toolkit==3.0.43
-click==8.1.7
+click==8.4.2
 typer==0.26.8
 playwright==1.60.0
 
