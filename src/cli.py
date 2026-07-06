@@ -4,6 +4,14 @@ import click
 from dotenv import load_dotenv
 from typing import Optional
 
+# Windows consoles default to a legacy codepage (e.g. cp1252) that can't
+# encode the ✓/✗ symbols used below; force UTF-8 so output doesn't crash.
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except AttributeError:
+    pass
+
 # Set up logging
 logging.basicConfig(
     level=logging.INFO,

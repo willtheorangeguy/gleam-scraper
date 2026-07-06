@@ -1,7 +1,7 @@
 beautifulsoup4==4.15.0
 requests==2.32.5
-sqlalchemy==2.0.23
-psycopg2-binary==2.9.9
+sqlalchemy==2.0.51
+psycopg2-binary==2.9.12
 python-dotenv==1.2.1
 rich==15.0.0
 prompt-toolkit==3.0.43
