@@ -2,9 +2,10 @@
 Interactive TUI for browsing and opening giveaways.
 """
 
+from __future__ import annotations
+
 import logging
 import webbrowser
-from typing import List, Tuple
 
 from prompt_toolkit.shortcuts import message_dialog, radiolist_dialog
 from rich.console import Console
@@ -20,11 +21,11 @@ console = Console()
 class SimpleTUI:
     """Arrow-key-driven giveaway browser."""
 
-    def __init__(self, giveaways: List[Giveaway]):
+    def __init__(self, giveaways: list[Giveaway]):
         self.giveaways = giveaways
 
-    def _build_choices(self) -> List[Tuple[str, str]]:
-        choices: List[Tuple[str, str]] = []
+    def _build_choices(self) -> list[tuple[str, str]]:
+        choices: list[tuple[str, str]] = []
         for index, giveaway in enumerate(self.giveaways):
             description = giveaway.description or ""
             compact_description = (
@@ -96,7 +97,7 @@ class SimpleTUI:
                     title="Opened",
                     text=f"Opened in browser:\n{giveaway.title}\n{giveaway.url}",
                 ).run()
-            except Exception as exc:
+            except webbrowser.Error as exc:
                 logger.error("Error opening browser: %s", exc)
                 message_dialog(
                     title="Error",

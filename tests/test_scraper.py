@@ -5,7 +5,8 @@ Tests for scraper module
 import pytest
 import requests
 from bs4 import BeautifulSoup
-from src.scraper import Giveaway, GleamScraper, GiveawayScraperError
+
+from src.scraper import Giveaway, GiveawayScraperError, GleamScraper
 
 
 def test_giveaway_creation():

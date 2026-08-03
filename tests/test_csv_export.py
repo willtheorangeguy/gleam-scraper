@@ -2,9 +2,10 @@
 Tests for CSV export module
 """
 
-import tempfile
 import csv
+import tempfile
 from pathlib import Path
+
 from src.csv_export import CSVExporter
 from src.scraper import Giveaway
 

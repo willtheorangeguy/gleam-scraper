@@ -2,11 +2,12 @@
 Web scraper for gleam.io giveaways.
 """
 
+from __future__ import annotations
+
 import logging
 import os
 import re
 import time
-from typing import List, Optional
 from urllib.parse import urljoin
 
 import requests
@@ -49,7 +50,7 @@ class GiveawayScraperError(Exception):
 class Giveaway:
     """Represents a gleam.io giveaway."""
 
-    def __init__(self, title: str, url: str, description: Optional[str] = None):
+    def __init__(self, title: str, url: str, description: str | None = None):
         self.title = title
         self.url = url
         self.description = description or ""
@@ -281,9 +282,9 @@ class GleamScraper:
 
     def _extract_giveaways_from_page(
         self, soup: BeautifulSoup
-    ) -> tuple[List[Giveaway], bool]:
+    ) -> tuple[list[Giveaway], bool]:
         """Extract giveaways from a parsed page. Returns (giveaways, has_more_pages)."""
-        giveaways: List[Giveaway] = []
+        giveaways: list[Giveaway] = []
         seen_urls = set()
 
         preview_links = soup.select("a.preview-tile__campaign-link[href]")
@@ -359,9 +360,9 @@ class GleamScraper:
         has_more = bool(next_button and next_button.get("href"))
         return giveaways, has_more
 
-    def scrape_all_giveaways(self) -> List[Giveaway]:
+    def scrape_all_giveaways(self) -> list[Giveaway]:
         """Scrape all giveaways from all pages."""
-        all_giveaways: List[Giveaway] = []
+        all_giveaways: list[Giveaway] = []
         page = 1
         max_pages = 100
 
