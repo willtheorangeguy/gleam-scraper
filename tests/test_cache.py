@@ -2,12 +2,15 @@
 Tests for cache module
 """
 
+from datetime import datetime, timedelta, timezone
+
 import pytest
-from datetime import datetime, timedelta
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from src.database import Base, Giveaway as GiveawayModel, ScraperMetadata
+
 from src.cache import CacheManager
+from src.database import Base, ScraperMetadata
+from src.database import Giveaway as GiveawayModel
 from src.scraper import Giveaway
 
 
@@ -32,7 +35,7 @@ def test_cache_valid_when_recent(test_db):
     """Test that cache is valid when recent"""
     # Add recent metadata
     metadata = ScraperMetadata(
-        last_successful_scrape=datetime.utcnow(),
+        last_successful_scrape=datetime.now(timezone.utc),
         last_scrape_count=5,
     )
     test_db.add(metadata)
@@ -46,7 +49,7 @@ def test_cache_invalid_when_stale(test_db):
     """Test that cache is invalid when stale"""
     # Add old metadata
     metadata = ScraperMetadata(
-        last_successful_scrape=datetime.utcnow() - timedelta(hours=1),
+        last_successful_scrape=datetime.now(timezone.utc) - timedelta(hours=1),
         last_scrape_count=5,
     )
     test_db.add(metadata)
@@ -98,7 +101,7 @@ def test_get_cached_giveaways(test_db):
 
     # Add recent metadata
     metadata = ScraperMetadata(
-        last_successful_scrape=datetime.utcnow(),
+        last_successful_scrape=datetime.now(timezone.utc),
         last_scrape_count=2,
     )
     test_db.add(metadata)

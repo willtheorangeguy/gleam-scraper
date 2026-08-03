@@ -2,8 +2,9 @@
 Stable service layer for external applications.
 """
 
+from __future__ import annotations
+
 from dataclasses import asdict, dataclass
-from typing import Dict, List, Optional
 
 from src.cache import CacheManager
 from src.database import SessionLocal, init_db
@@ -21,7 +22,7 @@ class Competition:
     description: str
 
     @classmethod
-    def from_giveaway(cls, giveaway: Giveaway) -> "Competition":
+    def from_giveaway(cls, giveaway: Giveaway) -> Competition:
         return cls(
             title=giveaway.title,
             url=giveaway.url,
@@ -36,9 +37,9 @@ def init_database() -> None:
 
 def list_competitions(
     force_refresh: bool = False,
-    scraper_mode: Optional[str] = None,
-    playwright_headless: Optional[bool] = None,
-) -> List[Competition]:
+    scraper_mode: str | None = None,
+    playwright_headless: bool | None = None,
+) -> list[Competition]:
     """
     Return competitions using cached data when valid, or scrape fresh data.
     """
@@ -62,8 +63,8 @@ def list_competitions(
 
 
 def refresh_competitions(
-    scraper_mode: Optional[str] = None, playwright_headless: Optional[bool] = None
-) -> List[Competition]:
+    scraper_mode: str | None = None, playwright_headless: bool | None = None
+) -> list[Competition]:
     """Force-refresh competitions from gleam.io."""
     return list_competitions(
         force_refresh=True,
@@ -72,7 +73,6 @@ def refresh_competitions(
     )
 
 
-def competitions_to_dicts(competitions: List[Competition]) -> List[Dict[str, str]]:
+def competitions_to_dicts(competitions: list[Competition]) -> list[dict[str, str]]:
     """Convert competition objects to JSON-friendly dictionaries."""
     return [asdict(competition) for competition in competitions]
-

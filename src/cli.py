@@ -1,8 +1,10 @@
+from __future__ import annotations
+
 import logging
 import sys
+
 import click
 from dotenv import load_dotenv
-from typing import Optional
 
 # Windows consoles default to a legacy codepage (e.g. cp1252) that can't
 # encode the ✓/✗ symbols used below; force UTF-8 so output doesn't crash.
@@ -52,10 +54,10 @@ load_dotenv()
     help="Show a visible browser window in Playwright browser mode",
 )
 def main(
-    export_csv: Optional[str],
+    export_csv: str | None,
     force_refresh: bool,
     init_db: bool,
-    scraper_mode: Optional[str],
+    scraper_mode: str | None,
     headed: bool,
 ):
     """
@@ -72,7 +74,8 @@ def main(
     try:
         from src.cache import CacheManager
         from src.csv_export import CSVExporter
-        from src.database import SessionLocal, init_db as init_database
+        from src.database import SessionLocal
+        from src.database import init_db as init_database
         from src.ui import SimpleTUI
 
         # Initialize database if requested
@@ -96,7 +99,7 @@ def main(
             )
         except Exception as e:
             click.echo(f"✗ Error loading giveaways: {e}", err=True)
-            logger.error(f"Error: {e}", exc_info=True)
+            logger.exception("Error loading giveaways")
             sys.exit(1)
 
         if not giveaways:
@@ -123,7 +126,7 @@ def main(
         click.echo("\n✓ Exiting...")
     except Exception as e:
         click.echo(f"✗ Fatal error: {e}", err=True)
-        logger.error(f"Fatal error: {e}", exc_info=True)
+        logger.exception("Fatal error")
         sys.exit(1)
     finally:
         if "db" in locals():

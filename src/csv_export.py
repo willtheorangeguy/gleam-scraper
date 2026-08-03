@@ -2,10 +2,12 @@
 CSV export functionality for giveaways
 """
 
+from __future__ import annotations
+
 import csv
 import logging
+from datetime import datetime, timezone
 from pathlib import Path
-from typing import List
 
 from .scraper import Giveaway
 
@@ -17,7 +19,7 @@ class CSVExporter:
     """Handles exporting giveaways to CSV format"""
 
     @staticmethod
-    def export(giveaways: List[Giveaway], filepath: str) -> bool:
+    def export(giveaways: list[Giveaway], filepath: str) -> bool:
         """Export giveaways to CSV file
 
         Args:
@@ -50,14 +52,12 @@ class CSVExporter:
             )
             return True
 
-        except Exception as e:
+        except (OSError, csv.Error) as e:
             logger.error(f"Error exporting to CSV: {e}")
             return False
 
     @staticmethod
     def get_filename_suggestion() -> str:
         """Get a suggested filename with timestamp"""
-        from datetime import datetime
-
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
         return f"giveaways_{timestamp}.csv"

@@ -4,10 +4,11 @@ Database configuration and models for gleam-scraper
 
 import os
 from datetime import datetime
-from sqlalchemy import create_engine, Column, String, DateTime, Integer, Text
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, Session
+
 from dotenv import load_dotenv
+from sqlalchemy import Column, DateTime, Integer, String, Text, create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import Session, sessionmaker
 
 load_dotenv()
 
