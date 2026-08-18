@@ -1,182 +1,77 @@
-# Gleam.io Giveaway Scraper
+<!-- Logo -->
+<h1 align="center">Gleam.io Giveaway Scraper</h1>
 
-A CLI tool to scrape and interactively browse gleam.io giveaways with browser integration and CSV export.
+<!-- Copy -->
+<h4 align="center">Scrape, cache, and interactively browse gleam.io giveaways from the terminal, with CSV export and a stable Python API.</h4>
 
-## Features
+<!-- Badges -->
+<div align="center">
+  <img alt="GitHub Issues" src="https://img.shields.io/github/issues/willtheorangeguy/gleam-scraper">
+  <img alt="GitHub Pull Requests" src="https://img.shields.io/github/issues-pr/willtheorangeguy/gleam-scraper">
+  <img alt="License" src="https://img.shields.io/github/license/willtheorangeguy/gleam-scraper">
+  <img alt="Python" src="https://img.shields.io/badge/python-3.9%2B-blue">
+</div>
 
-- 🌐 Scrape all giveaways from gleam.io with automatic pagination
-- 💾 Persistent caching with PostgreSQL (30-minute auto-refresh)
-- 🎯 Interactive CLI with arrow key navigation
-- 🔗 One-click browser opening for giveaways
-- 📊 CSV export functionality
-- 🐳 Docker-ready for future web app deployment
+<!-- Navigation -->
+<p align="center">
+  <a href="#key-features">Key Features</a> •
+  <a href="#installation">Installation</a> •
+  <a href="#usage">Usage</a> •
+  <a href="#documentation">Documentation</a> •
+  <a href="#support">Support</a> •
+  <a href="#contributing">Contributing</a> •
+  <a href="#credits">Credits</a> •
+  <a href="#license">License</a>
+</p>
+
+## Key Features
+
+- Scrapes every giveaway with automatic pagination.
+- Two fetch backends — plain HTTP requests, or a real browser — with automatic fallback when Gleam blocks the simpler one.
+- Persistent cache in SQLite locally or PostgreSQL in production, with a 30-minute refresh.
+- Interactive terminal list with arrow-key navigation and one-key browser opening.
+- CSV export.
+- A stable Python API, so a web front end can consume it without reimplementing the scraper.
 
 ## Installation
 
-### Requirements
-- Python 3.9+
-- PostgreSQL 12+ (optional - SQLite works for local development)
-
-### Setup
-
-1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/gleam-scraper.git
+git clone https://github.com/willtheorangeguy/gleam-scraper.git
 cd gleam-scraper
-```
-
-2. Create a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-3. Install dependencies:
-```bash
 pip install -r requirements.txt
-```
-
-4. Set up environment variables:
-```bash
 cp .env.example .env
-# Edit .env if you want to use PostgreSQL (optional - defaults to SQLite)
-```
-
-5. Initialize the database:
-```bash
 python -m src.cli --init-db
 ```
 
-**Note:** The project defaults to SQLite (`gleam_scraper.db`) for local development. For production/Docker deployment, configure PostgreSQL in your `.env` file.
+Requires Python 3.9+. SQLite is the default; PostgreSQL is optional. See [`docs/installation.md`](docs/installation.md).
 
 ## Usage
 
-### Run the interactive CLI
 ```bash
 python -m src.cli
 ```
 
-### Export to CSV
-```bash
-python -m src.cli --export-csv giveaways.csv
-```
+Arrow keys to navigate, `Enter` to act on a giveaway, `Esc` to quit.
 
-### Force refresh cache
-```bash
-python -m src.cli --force-refresh
-```
+## Documentation
 
-### Use browser runtime (Playwright)
-```bash
-python -m src.cli --force-refresh --scraper-mode browser
-```
+Full documentation lives in [`docs/`](docs/README.md):
+[Quickstart](docs/quickstart.md) · [Installation](docs/installation.md) · [Configuration](docs/configuration.md) · [Architecture](docs/architecture.md) · [API](docs/api.md) · [Deployment](docs/deployment.md) · [FAQ](docs/faq.md) · [Troubleshooting](docs/troubleshooting.md) · [Roadmap](docs/roadmap.md)
 
-### Show visible browser window (not headless)
-```bash
-python -m src.cli --force-refresh --scraper-mode browser --headed
-```
+## Support
 
-### Show help
-```bash
-python -m src.cli --help
-```
-
-### 403 Troubleshooting
-If you still get `403`/`Access Denied`, Gleam is blocking automated access from your environment.
-The scraper now uses browser-like headers, retries, and optional browser fallback, but access can still be denied by server-side controls.
-
-## Interactive Navigation
-
-- **Arrow keys**: Navigate through the full giveaway list (scrollable)
-- **Enter**: Select giveaway and choose an action (open/details/back)
-- **Esc**: Exit dialogs and quit from the main list
-
-## Configuration
-
-Edit `.env` to customize:
-- `DATABASE_URL`: PostgreSQL connection string
-- `CACHE_TTL`: Cache timeout in minutes (default: 30)
-- `REQUEST_TIMEOUT`: HTTP request timeout in seconds (default: 10)
-- `REQUEST_DELAY_SECONDS`: Delay between page fetches (default: 1.0)
-- `MAX_RETRIES`: Retry count for transient HTTP failures (default: 3)
-- `SCRAPER_MODE`: `auto`, `requests`, or `browser` (default: `auto`)
-- `PLAYWRIGHT_HEADLESS`: Run browser headless (`true`/`false`)
-- `PLAYWRIGHT_BROWSER`: `chromium`, `firefox`, or `webkit`
-- `PLAYWRIGHT_WAIT_UNTIL`: page load target (`domcontentloaded`, `load`, `networkidle`, `commit`)
-- `PLAYWRIGHT_POST_NAV_WAIT_MS`: extra JS settle time after navigation
-- `PLAYWRIGHT_TIMEOUT_MULTIPLIER`: multiplies `REQUEST_TIMEOUT` for browser navigation
-
-If Gleam returns 403 in request mode, `SCRAPER_MODE=auto` can fall back to a real browser fetcher.
-Install browser support with:
-
-```bash
-pip install playwright
-python -m playwright install chromium
-```
-
-## Docker Usage (Future)
-
-```bash
-docker build -t gleam-scraper .
-docker run --env-file .env gleam-scraper
-```
-
-## Development
-
-### Run tests
-```bash
-pytest -v
-```
-
-### Run tests with coverage
-```bash
-pytest --cov=src tests/
-```
-
-### Format code
-```bash
-black src/ tests/
-```
-
-### Lint
-```bash
-flake8 src/ tests/
-```
-
-## Architecture
-
-The project is structured for easy migration to a web app:
-
-- **src/scraper.py**: Web scraping logic (reusable)
-- **src/database.py**: Data models and ORM (reusable)
-- **src/cache.py**: Caching layer (reusable)
-- **src/ui.py**: CLI/TUI components
-- **src/cli.py**: CLI entry point
-
-## Programmatic API (for separate web repo)
-
-To integrate this project into a separate web application repository, use the stable public package API:
-
-```python
-from gleam_scraper import init_database, list_competitions, competitions_to_dicts
-
-init_database()
-competitions = list_competitions(force_refresh=False, scraper_mode="auto")
-payload = competitions_to_dicts(competitions)
-```
-
-The `gleam_scraper` package exposes:
-- `init_database()`
-- `list_competitions(...)`
-- `refresh_competitions(...)`
-- `competitions_to_dicts(...)`
-
-This keeps the scraper as the single source of truth while your web repo focuses on API/UI concerns.
-
-## License
-
-MIT
+Open a [GitHub Discussion](https://github.com/willtheorangeguy/gleam-scraper/discussions/new) or file an [issue](https://github.com/willtheorangeguy/gleam-scraper/issues/new/choose).
 
 ## Contributing
 
-Contributions welcome! Please open an issue or submit a pull request.
+Contributions welcome. See the org-wide [Contributing Guide](https://github.com/willtheorangeguy/.github/blob/main/CONTRIBUTING.md) and [Code of Conduct](https://github.com/willtheorangeguy/.github/blob/main/CODE_OF_CONDUCT.md).
+
+## Credits
+
+Built with [Playwright](https://playwright.dev/python/), [SQLAlchemy](https://www.sqlalchemy.org/), and [PostgreSQL](https://www.postgresql.org/).
+
+## License
+
+MIT — see [`LICENSE.md`](LICENSE.md).
+
+> For personal use. Gleam actively blocks automated access, and the browser fallback exists to work with that rather than around it — keep request rates reasonable.
